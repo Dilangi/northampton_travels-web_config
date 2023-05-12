@@ -43,7 +43,7 @@
     <body>
         <div id="logo-section"></div>
         <main>
-            <form action="../user.php" method="POST">
+            <form action="../user.php?op=1&addUser=1" method="POST">
                 <p>Username: </p>
                 <input type="text" name="username" placeholder="Username"/>
                 <p>Password: </p>
@@ -60,6 +60,13 @@
 // if(isset($_GET['fname'])){
 //     echo "Hello ".$_GET['fname']; 
 // }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $name = $_POST["name"];
+  $breed = $_POST["breed"];
+  $age = $_POST["age"];
+
+  insertCat($name, $breed, $age);
+}
 
 
 if(isset($_GET['input1']) && isset($_GET['input2'])){
