@@ -26,9 +26,12 @@
                 margin-top:20px;
             }
             input{
-                font-size: 18px;
+                font-size: 14px;
                 padding:10px;
                 width:100%;
+            }
+            th{
+                text-align:left;
             }
             .ratingOverall{
                 /* width:100%; */
@@ -64,42 +67,113 @@
                 background: url('../Images/btn_background.png');
                 border-radius:30px;
             }
+            select {
+                padding:10px;
+                /* border: 1px solid #ccc; */
+                /* border-radius: 4px; */
+                /* background-color: #fff; */
+                /* box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); */
+            }
+            /* select:hover {
+                border-color: #aaa;
+            }
+            select:focus {
+                outline: none;
+                border-color: #4d90fe;
+                box-shadow: 0 0 5px rgba(77, 144, 254, 0.5);
+            } */
+      
+            /* Style the navigation bar */
+            .navbar {
+                position: absolute;
+                width:100%;
+                /* left: 30%; */
+                top: 0%;
+                background-color:#002060;
+                /* overflow: hidden; */
+            }
+
+            /* Style the links inside the navigation bar */
+            .navbar a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            /* Change the color of links on hover */
+            .navbar a:hover {
+                background-color: #ddd;
+                color: black;
+            }
         </style>
     </head>
     <body>
         <header>Add Review</header>
+        <div class="navbar">
+            <a href="#home">Home</a>
+            <a href="#addReview">AddReview</a>
+            <a href="#myProfile">My Profile</a>
+        </div>
         <main>
             <form action="../review.php" method="POST">
                  <table>
                     <tr>
+                        <th>
+                            <p>Package Name</p>
+                        </th>
                         <td>
-                            <p>Package Name:</p>
-                        </td>
-                        <td>
-                            <input type="text" name="packagesName"/>
+                        <select id="dropdown">
+                            <option value="option1">Please Select Package</option>
+                            <option value="option2">England,Scotland and Ireland</option>
+                            <option value="option3">United Kingdom and Ireland</option>
+                            <option value="option4">Britain and Ireland Delight</option>
+                            <option value="option5">Britain and Ireland Explorer</option>
+                            <option value="option6">Wonders of Britain and Ireland</option>
+                            <option value="option7">Best of UK and Ireland</option>
+                            <option value="option8">Great Britain</option>
+                            <option value="option9">Grand Tour of Britain and Ireland</option>
+                            <option value="option10">The Best of Britain and Ireland</option>
+                            <option value="option11">Essential Britain and Ireland</option>
+                            <option value="option12">Delve Deep: Britain and Ireland</option>
+                            <option value="option13">England, Scotland and Wales</option>
+                            <option value="option14">England, Scotland Heritage</option>
+                            <option value="option15">Romantic Britain and Ireland</option>
+                            <option value="option16">Aonghus Youth</option>
+                            <option value="option17">Irish Highlights (Summer, 7 Days)</option>
+                            <option value="option18">3 Day Isle of Skye</option>
+                            <option value="option19">Best of Scotland (Summer, 7 Days)</option>
+                            <option value="option20">A life en Rose (16 destinations)</option>
+                            <option value="option21">3 Day Loch Nees and Skye</option>
+                            <option value="option22">Great Tour of Ireland</option>
+                            <option value="option23">Highland Fling</option>
+                        </select>
+                            <!-- <input type="text" name="packagesName"/> -->
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Visited Date: </p>
-                        </td>
+                        <th>
+                            <p>Visited Date </p>
+                        </th>
                         <td>
                             <input type="date" name="visitedDate"/>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Overall (review): </p>
-                        </td>
+                        <th>
+                            <p>Overall (review) </p>
+                        </th>
                         <td>
                             <input type="text" name="overall"/>
                             
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Overall : </p>
-                        </td>
+                        <th>
+                            <p>Overall </p>
+                        </th>
                         <td>
                             <div class="ratingOverall">
                                 <input type="radio" name="star" id="overAllStar1"><label for="overAllStar1"></label>
@@ -111,49 +185,49 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Food (review): </p>
-                        </td>
+                        <th>
+                            <p>Food (review) </p>
+                        </th>
                         <td>
                             <input type="text" name="food"/>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Food Rating: </p>
-                        </td>
+                        <th>
+                            <p>Food Rating </p>
+                        </th>
                         <td>
                             <input type="text" name="foodRating" placeholder="Number between 1 to 5. "/>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Transport (review): </p>
-                        </td>
+                        <th>
+                            <p>Transport (review)</p>
+                        </th>
                         <td>
                             <input type="text" name="transport"/>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Transport Rating: </p>
-                        </td>
+                        <th>
+                            <p>Transport Rating </p>
+                        </th>
                         <td>
                             <input type="text" name="transportRating" placeholder="Number between 1 to 5. "/>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Accommodation (review): </p>
-                        </td>
+                        <th>
+                            <p>Accommodation (review) </p>
+                        </th>
                         <td>
                             <input type="text" name="accommodation"/>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <p>Accommodation Rating: </p>
-                        </td>
+                        <th>
+                            <p>Accommodation Rating </p>
+                        </th>
                         <td>
                             <input type="text" name="accommodationRating" placeholder="Number between 1 to 5. "/>
                         </td>
