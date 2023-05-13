@@ -2,6 +2,7 @@
     <head>
         <title>Northampton Travels</title>
         <style>
+            /* styling of header  */
             #logo-section { 
                 width: 100%;
                 height: 30vh;
@@ -11,19 +12,26 @@
                 background-position: center;
             }
       
+            /*align the form */
             main {
                 position: absolute;
                 left: 40%;
             }
+
+            /* title styling */
             p{
                 font-size: 20px;
                 margin-top:20px;
             }
+
+            /* input field styling */
             input{
                 font-size: 18px;
                 padding:10px;
                 width:100%;
             }
+
+            /* button styling */
             button{
                 font-size: 20px;
                 color: white;
@@ -34,47 +42,67 @@
             }
         </style>
         <script>
+            //check whether password correctly entered
             function validate(event) {
                 //assign user inputs to variables
                 var form =document.forms["registerForm"];
                 var password = form.elements["password"].value;
                 var confirmPassword = form.elements["confirmPassword"].value;
                 
-                //check whether password correctly entered
                 if(password!=confirmPassword){
                     alert("Password mismatch!");
-                    event.preventDefault();
+                    // event.preventDefault();
                     return false;
                 }
 
                 return true;
             }
             
+            // direct to next page
             function redirectToNextPage() {
-                window.location.href = './login.php';
+                window.location.href = './login.html';
             }
 
+            //insert user details to databse
             function addUser(event){
                 if (validate()){
-                    var formData = new FormData(form);
-
+                    // Get the form data
                     var form =document.forms["registerForm"];
-                    form.action = "../user.php?op=1&addUser";
-                    form.method="POST";
+                    var firstName = form.elements["firstName"].value;
+                    var lastName = form.elements["lastName"].value;
+                    var email = form.elements["email"].value;
+                    var username = form.elements["username"].value;
+                    var password = form.elements["password"].value;
 
-                    const xhr = new XMLHttpRequest();
-                    xhr.open(form.method, form.action);
-                    xhr.onreadystatechange = () => {
-                        if (xhr.readyState === XMLHttpRequest.DONE) {
-                            if (xhr.status === 200) {
-                                alert("Successfully Registered!");
+                    var formData = new FormData(form);
+                    form.action = "../user.php?op=1&addUser=1";
+                    form.method="POST";
+                    
+                    //create resuest object
+                    if(window.XMLHttpRequest){
+                        xhr = new XMLHttpRequest();
+                    }else{
+                        if(window.ActiveXObject){
+                            xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                    }
+                    
+                    xhr.open(form.method, form.action, true);   // open connection with server
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			        xhr.onload =function(){
+                        if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                            if (xhr.status === 200) {                   //request is successful
+                                var response = JSON.parse(xhr.responseText);
+                                alert(response.message);
                                 redirectToNextPage();
                             } else {
                                 alert('Error submitting form');
                             }
                         }
                     };
-                    xhr.send(formData);
+                    //send the request object
+                    xhr.send('firstName=' + firstName + '&lastName=' + lastName 
+                    + '&username=' + username + '&email=' + email + '&password=' + password); 
                 }
             }
         </script>
@@ -82,18 +110,18 @@
     <body>
         <div id="logo-section"></div>
         <main>
-            <form id="registerForm" onsubmit="addUser(event)">
-                <p>First Name*: </p>
+            <form id="registerForm" onsubmit="event.preventDefault(); addUser(event)">
+                <p>First Name: </p>
                 <input type="text" name="firstName" placeholder="First Name" required/>
                 <p>Last Name: </p>
                 <input type="text" name="lastName" placeholder="Last Name"/>
-                <p>Email*: </p>
+                <p>Email: </p>
                 <input type="email" name="email" placeholder="Email" required/>
-                <p>Username*: </p>
+                <p>Username: </p>
                 <input type="text" name="username" placeholder="Username" required/>
-                <p>Password*: </p>
+                <p>Password: </p>
                 <input type="password" name="password" placeholder="Password" required/>
-                <p>Confirm Password*: </p>
+                <p>Confirm Password: </p>
                 <input type="password" name="confirmPassword" placeholder="Confirm Password" required/>
                 <br></br>
                 <button type="submit">SIGNUP</button>
