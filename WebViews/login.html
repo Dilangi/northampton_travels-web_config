@@ -90,7 +90,6 @@
                             if(!response.error){
                                 if(response.user.password === password){
                                     localStorage.setItem('user', JSON.stringify(response.user));
-                                    // const storedUser = JSON.parse(localStorage.getItem('user'));
                                     alert(response.message);
                                     redirectToNextPage();
                                 }

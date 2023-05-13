@@ -1,0 +1,318 @@
+<html>
+    <head>
+        <title>Northampton Travels</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
+        <style>
+            header { 
+                width: 100%;
+                height: 10vh;
+                background-image: url('../Images/bg_review.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                font-size:40px;
+                color: #002060;
+                text-align: center;
+                padding-top:80px;
+            }
+      
+            main {
+                position: absolute;
+                left: 30%;
+                top: 25%;
+            }
+            p{
+                font-size: 20px;
+                margin-top:20px;
+            }
+            input{
+                font-size: 14px;
+                padding:10px;
+                width:100%;
+            }
+            th{
+                text-align:left;
+            }
+            .ratingOverall{
+                /* width:100%; */
+                display: flex;
+                transform:rotate(180deg);
+                margin-right:50px;
+            }
+            .ratingOverall input{
+                display: none;
+            }
+             .ratingOverall label{
+                cursor: pointer;
+            }
+            .ratingOverall label:before{
+                content:"\2605";
+                color:grey;
+                font-size:40px;
+            }
+             .ratingOverall label:after{
+                content:'\2605';
+                color:yellow;
+                font-size:40px;
+                position:absolute;
+                opacity:0;
+            }
+            .ratingOverall input:checked ~ label:after{opacity:1;}
+
+            button{
+                font-size: 20px;
+                color: white;
+                margin:20px 150px;
+                padding:20px 50px;
+                background: url('../Images/btn_background.png');
+                border-radius:30px;
+            }
+            select {
+                padding:10px;
+                /* border: 1px solid #ccc; */
+                /* border-radius: 4px; */
+                /* background-color: #fff; */
+                /* box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); */
+            }
+            /* select:hover {
+                border-color: #aaa;
+            }
+            select:focus {
+                outline: none;
+                border-color: #4d90fe;
+                box-shadow: 0 0 5px rgba(77, 144, 254, 0.5);
+            } */
+      
+            /* Style the navigation bar */
+            .navbar {
+                position: absolute;
+                width:100%;
+                /* left: 30%; */
+                top: 0%;
+                background-color:#002060;
+                /* overflow: hidden; */
+            }
+
+            /* Style the links inside the navigation bar */
+            .navbar a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            /* Change the color of links on hover */
+            .navbar a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+        </style>
+
+        <script>
+            // direct to home page
+            function redirectToNextPage() {
+                window.location.href = './home.html';
+            }
+
+            //insert user details to databse
+            function addReview(){
+                // Get the form data
+                var selectElement = document.getElementById("dropdown");
+                if(selectElement.selectedIndex===0){//validate dropdown selection
+                    alert("Please Select Package");
+                }else{
+                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                var packagesName = selectedOption.text;
+
+                var form =document.forms["addReviewForm"];
+                var visitedDate = form.elements["visitedDate"].value;
+                var overall = form.elements["overall"].value;
+                var ratingOverall = form.elements["ratingOverall"].value;
+                var food = form.elements["food"].value;
+                var foodRating = form.elements["foodRating"].value;
+                var transport = form.elements["transport"].value;
+                var transportRating = form.elements["transportRating"].value;
+                var accommodation = form.elements["accommodation"].value;
+                var accommodationRating = form.elements["accommodationRating"].value;
+
+                const storedUser = JSON.parse(localStorage.getItem('user'));
+                var author=storedUser.username;
+
+                // Format dd/mm/yyyy
+                var today = new Date();
+                var day = today.getDate();
+                var month = today.getMonth() + 1; 
+                var year = today.getFullYear();
+                var postedDate = day + '/' + month + '/' + year;
+
+                form.action = "../review.php?op=1&addReview=1";
+                form.method="POST";
+
+                var formData = new FormData(form);
+
+                //create resuest object
+                if(window.XMLHttpRequest){
+                    xhr = new XMLHttpRequest();
+                }else{
+                    if(window.ActiveXObject){
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                }
+                xhr.open(form.method, form.action);  // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			    xhr.onload =function(){
+                    if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                        if (xhr.status === 200) {                   //request is successful
+                            let response = JSON.parse(xhr.responseText);
+                            if(!response.error){
+                                alert(response.message);
+                                redirectToNextPage();
+                            }
+                            else {
+                                alert('Error submitting form');
+                            }
+                        } 
+                    } else {
+                        alert('Ooops! Try again');
+                    }
+                };
+                xhr.send('packagesName=' + packagesName 
+                + '&visitedDate=' + visitedDate  
+                + '&overallRating=' + ratingOverall 
+                + '&overall=' + overall 
+                + '&food=' + food 
+                + '&foodRating=' + foodRating 
+                + '&transport=' + transport 
+                + '&transportRating=' + transportRating 
+                + '&accommodation=' + accommodation 
+                + '&accommodationRating=' + accommodationRating 
+                + '&author=' + author 
+                + '&postedDate=' + postedDate);//send the request object
+            }}
+        </script>
+    </head>
+    <body>
+        <header>Add Review</header>
+        <div class="navbar">
+            <a href="./home.html">Home</a>
+            <a href="./addReview.html">AddReview</a>
+            <a href="./myReviews.html">My Reviews</a>
+            <a href="./myProfile.html">My Profile</a>
+        </div>
+        <main>
+            <form id="addReviewForm"  onsubmit="event.preventDefault(); addReview()">
+                 <table>
+                    <tr>
+                        <th>
+                            <p>Package Name</p>
+                        </th>
+                        <td>
+                            <select id="dropdown" name="packagesName" required>
+                                <option value="option1">Please Select Package</option>
+                                <option value="option2">England,Scotland and Ireland</option>
+                                <option value="option3">United Kingdom and Ireland</option>
+                                <option value="option4">Britain and Ireland Delight</option>
+                                <option value="option5">Britain and Ireland Explorer</option>
+                                <option value="option6">Wonders of Britain and Ireland</option>
+                                <option value="option7">Best of UK and Ireland</option>
+                                <option value="option8">Great Britain</option>
+                                <option value="option9">Grand Tour of Britain and Ireland</option>
+                                <option value="option10">The Best of Britain and Ireland</option>
+                                <option value="option11">Essential Britain and Ireland</option>
+                                <option value="option12">Delve Deep: Britain and Ireland</option>
+                                <option value="option13">England, Scotland and Wales</option>
+                                <option value="option14">England, Scotland Heritage</option>
+                                <option value="option15">Romantic Britain and Ireland</option>
+                                <option value="option16">Aonghus Youth</option>
+                                <option value="option17">Irish Highlights (Summer, 7 Days)</option>
+                                <option value="option18">3 Day Isle of Skye</option>
+                                <option value="option19">Best of Scotland (Summer, 7 Days)</option>
+                                <option value="option20">A life en Rose (16 destinations)</option>
+                                <option value="option21">3 Day Loch Nees and Skye</option>
+                                <option value="option22">Great Tour of Ireland</option>
+                                <option value="option23">Highland Fling</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Visited Date </p>
+                        </th>
+                        <td>
+                            <input type="date" name="visitedDate"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Overall (review) </p>
+                        </th>
+                        <td>
+                            <input type="text" name="overall"/>
+                            
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Overall Rating</p>
+                        </th>
+                        <td>
+                            <input type="number" name="ratingOverall" min="1" max="5" placeholder="Number between 1 to 5." required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Food (review) </p>
+                        </th>
+                        <td>
+                            <input type="text" name="food"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Food Rating </p>
+                        </th>
+                        <td>
+                            <input type="number" name="foodRating" min="1" max="5" placeholder="Number between 1 to 5." required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Transport (review)</p>
+                        </th>
+                        <td>
+                            <input type="text" name="transport"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Transport Rating </p>
+                        </th>
+                        <td>
+                            <input type="number" name="transportRating" min="1" max="5" placeholder="Number between 1 to 5." required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Accommodation (review) </p>
+                        </th>
+                        <td>
+                            <input type="text" name="accommodation"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <p>Accommodation Rating </p>
+                        </th>
+                        <td>
+                            <input type="number" name="accommodationRating" min="1" max="5" placeholder="Number between 1 to 5." required>
+                        </td>
+                    </tr>
+                </table>
+                <br></br>
+                <button type="submit">Add Review</button>
+            </form>
+        </main>
+    </body>
+</html>
