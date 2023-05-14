@@ -52,6 +52,26 @@
         }
     }
     
+    //select a review for reviewId
+    else if(isset($_GET['reviewIdReview'])){
+        if(isset($_POST['reviewId'])){
+          $result = fetchARecordWithOneWhereClause("review","reviewId",$_POST['reviewId']);
+          $review = $result->fetch(PDO::FETCH_ASSOC);  //fetch data from the statement
+      
+          if($result){
+              $response['error'] = false;
+              $response['review'] = $result;
+              $response['message'] = 'Successfully Loaded!!';
+          }else{
+              $response['error'] = true;
+              $response['message'] = 'No reviews';
+          }
+        }else{
+          $response['error'] = true;
+          $response['message'] = 'Required Parameters are missing';
+        }
+    }
+    
     //select review of the logged person
     else if(isset($_GET['authorReviews'])){
       if(isset($_POST['author'])){

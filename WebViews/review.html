@@ -63,12 +63,52 @@
                 opacity:0;
             }
             .ratingOverall input:checked ~ label:after{opacity:1;} */
-        button {
+        /* button {
             font-size: 20px;
             color: white;
             margin: 20px 150px;
             padding: 20px 50px;
             background: url('../Images/btn_background.png');
+            border-radius: 30px;
+        } */
+
+        #btnSave {
+            font-size: 16px;
+            width: 20%;
+            color: white;
+            margin: 20px 150px;
+            padding: 20px;
+            background-color: rgb(47, 186, 47);
+            border-radius: 30px;
+        }
+
+        #btnDelete {
+            font-size: 16px;
+            width: 20%;
+            color: white;
+            margin: 20px 150px;
+            padding: 20px;
+            background-color: rgb(142, 8, 8);
+            border-radius: 30px;
+        }
+
+        #btnLike {
+            font-size: 16px;
+            width: 20%;
+            color: white;
+            margin: 20px 150px;
+            padding: 20px 50px;
+            background-color: rgb(73, 8, 178);
+            border-radius: 30px;
+        }
+
+        #btnDislike {
+            font-size: 16px;
+            width: 20%;
+            color: white;
+            margin: 20px 150px;
+            padding: 20px 50px;
+            background-color: rgb(105, 112, 172);
             border-radius: 30px;
         }
 
@@ -114,16 +154,123 @@
             background-color: #ddd;
             color: black;
         }
+
+        aside {
+            margin-right: 50px;
+            position: absolute;
+            left: 60%;
+            top: 25%;
+        }
     </style>
 
     <script>
-        // direct to home page
-        function redirectToNextPage() {
+        //direct to home page
+        function directPage() {
+            localStorage.setItem('reviewId', "");
             window.location.href = './home.html';
         }
 
-        //insert user details to databse
-        function addReview() {
+        //delete review
+        function deleteReview() {
+            const reviewId = parseInt(localStorage.getItem('reviewId'));
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            xhr.open("POST", "../review.php?op=1&deleteReview=1");  // open connection with server
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('reviewId=' + reviewId);
+            xhr.onload = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                    if (xhr.status === 200) {                   //request is successful
+                        let response = JSON.parse(xhr.responseText);
+                        if (!response.error) {
+                            alert(response.message);
+                            redirectToNextPage();
+                        }
+                        else {
+                            alert('Error submitting form');
+                        }
+                    }
+                } else {
+                    alert('Ooops! Try again');
+                }
+            };
+        }
+
+        //update like count
+        function likeReview() {
+            const storedReview = parseInt(localStorage.getItem('reviewId'));
+            var reviewId = storedReview.reviewId;
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            xhr.open("POST", "../review.php?op=1&addLikes=1");  // open connection with server
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('reviewId=' + reviewId);
+            xhr.onload = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                    if (xhr.status === 200) {                   //request is successful
+                        let response = JSON.parse(xhr.responseText);
+                        if (!response.error) {
+                            alert(response.message);
+                            redirectToNextPage();
+                        }
+                        else {
+                            alert('Error submitting form');
+                        }
+                    }
+                } else {
+                    alert('Ooops! Try again');
+                }
+            };
+        }
+
+        //update dislike count
+        function dislikeReview() {
+            const storedReview = parseInt(localStorage.getItem('reviewId'));
+            var reviewId = storedReview.reviewId;
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            xhr.open("POST", "../review.php?op=1&addDislike=1");  // open connection with server
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('reviewId=' + reviewId);
+            xhr.onload = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                    if (xhr.status === 200) {                   //request is successful
+                        let response = JSON.parse(xhr.responseText);
+                        if (!response.error) {
+                            alert(response.message);
+                            redirectToNextPage();
+                        }
+                        else {
+                            alert('Error submitting form');
+                        }
+                    }
+                } else {
+                    alert('Ooops! Try again');
+                }
+            };
+        }
+
+        //update review data
+        function updateReview() {
+
+            const storedReview = parseInt(localStorage.getItem('reviewId'));
+            var reviewId = storedReview.reviewId;
+
             // Get the form data
             var selectElement = document.getElementById("dropdown");
             if (selectElement.selectedIndex === 0) {//validate dropdown selection
@@ -143,17 +290,7 @@
                 var accommodation = form.elements["accommodation"].value;
                 var accommodationRating = form.elements["accommodationRating"].value;
 
-                const storedUser = JSON.parse(localStorage.getItem('user'));
-                var author = storedUser.username;
-
-                // Format dd/mm/yyyy
-                var today = new Date();
-                var day = today.getDate();
-                var month = today.getMonth() + 1;
-                var year = today.getFullYear();
-                var postedDate = day + '/' + month + '/' + year;
-
-                form.action = "../review.php?op=1&addReview=1";
+                form.action = "../review.php?op=1&updateReview=1";
                 form.method = "POST";
 
                 var formData = new FormData(form);
@@ -174,7 +311,7 @@
                             let response = JSON.parse(xhr.responseText);
                             if (!response.error) {
                                 alert(response.message);
-                                redirectToNextPage();
+                                directPage();
                             }
                             else {
                                 alert('Error submitting form');
@@ -193,10 +330,39 @@
                     + '&transport=' + transport
                     + '&transportRating=' + transportRating
                     + '&accommodation=' + accommodation
-                    + '&accommodationRating=' + accommodationRating
-                    + '&author=' + author
-                    + '&postedDate=' + postedDate);//send the request object
+                    + '&accommodationRating=' + accommodationRating);//send the request object
             }
+        }
+
+        //set review data  
+        function setReview() {
+            const storedReview = parseInt(localStorage.getItem('reviewId'));
+            var reviewId = storedReview.reviewId;
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            xhr.open("POST", "../review.php?op=1&reviewIdReview=1");  // open connection with server
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('reviewId=' + reviewId);
+            xhr.onload = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                    if (xhr.status === 200) {                   //request is successful
+                        let response = JSON.parse(xhr.responseText);
+                        if (!response.error) {
+                        }
+                        else {
+                            alert('Error submitting form');
+                        }
+                    }
+                } else {
+                    alert('Ooops! Try again');
+                }
+            };
+
         }
     </script>
 </head>
@@ -322,10 +488,14 @@
                     </td>
                 </tr>
             </table>
-            <br></br>
-            <button type="submit">Add Review</button>
         </form>
     </main>
+    <aside>
+        <button id="btnSave" type="submit" onClick="updateReview()"> Save Edit</button>
+        <button id="btnDelete" type="submit" onClick="deleteReview()">Delete</button>
+        <button id="btnLike" type="submit" onClick="likeReview()">Like</button>
+        <button id="btnDislike" type="submit" onClick="dislikeReview()">Dislike</button>
+    </aside>
 </body>
 
 </html>
