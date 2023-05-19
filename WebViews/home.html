@@ -107,7 +107,7 @@
             width: 90%;
         }
 
-        /* Set the width of the second column to 40% */
+        /* Set the width of the second column to 10% */
         th:nth-child(2),
         td:nth-child(2) {
             width: 10%;
@@ -116,51 +116,73 @@
         }
 
 
+
         i {
             color: #002060;
             padding: 10px;
             margin: 10px;
         }
+
+        #replyRow {
+            background-color: #717374;
+            border-radius: 30px 0px 30px 30px;
+            color: black;
+            padding: 20px;
+        }
     </style>
     <script>
+        var userId =0;
+        var reviewObject;
+        function thumbUpClick(reviewId, row) {
+    var likesCount = document.getElementById('likesCount' + row);
+    var count = parseInt(likesCount.textContent);
+    var likes = document.getElementById("likes" + row);
+    var likedSet ="";
+    
+    getLikesList(reviewId);
+    if (likes.classList.contains("fas")) {
+        likes.classList.remove("fas");
+        likes.classList.add("far");
+        var replacer = "| "+reviewId;
+        likedSet = reviewObject.likedSet.replace(replacer,"");
+        count--;
+    } else {
+        likes.classList.remove("far");
+        likes.classList.add("fas");
+        likedSet = reviewObject.likedSet + "| "+reviewId;
+        count++;
+    }
+    console.log("likedSet = "+likedSet);
+    likesCount.textContent = count;
+    // Call the desired method or perform any other actions here
+    submitLikes(count, reviewId, likedSet);
+}
+        // function thumbUpClick(reviewId, row) {
+            
+        //     //  var table = document.getElementById('card');
+        //     //  var icon = table.rows[row].cells[1].querySelector('i');
 
-        var countUp = 0;
-        var countDown = 0;
+        //     var likesCount = document.getElementById('likesCount');
+        //     var count = parseInt(likesCount.textContent);
+        //     var likes = document.getElementById("likes");
 
-        function thumbUpClick(num) {
-            // var likes = document.getElementById("thumb");
+        //     if (likes.classList.contains("fas")) {
+        //         likes.classList.remove("fas");
+        //         likes.classList.add("far");
+        //         // likedSet.replace(removeId,"");
+        //         count--;
+        //     } else {
+        //         likes.classList.remove("far");
+        //         likes.classList.add("fas");
+        //         // likedSet +=likedSet+reviewId;
+        //         count++;
+        //         console.log(count);
+        //     }
+        //     likesCount.textContent = count;
+        //     // submitLikes(count, reviewId);
+        //     // document.getElementById("card").innerHTML = txt; 
 
-            // if (likes.classList.contains("fas")) {
-            //     console.log("dil");
-            //     likes.classList.remove("fas");
-            //     likes.classList.add("far");
-            //             // countUp--;
-            //         } else {
-            //             console.log("dil");
-            //             likes.classList.remove("far");
-            //             likes.classList.add("fas");
-            //             // countUp++;
-
-            //         }
-
-            var likes = document.getElementById("likes");
-            var likesCount = document.getElementById("likesCount");
-
-
-            if (likes.classList.contains("fas")) {
-                likes.classList.remove("fas");
-                likes.classList.add("far");
-                num -= num;
-            } else {
-                likes.classList.remove("far");
-                likes.classList.add("fas");
-                num += num;
-            }
-            likesCount.textContent = num;
-            submitLikes();
-            // document.getElementById("card").innerHTML = txt; 
-
-        }
+        // }
         function thumbDownClick(num, reviewId, likedListHas, userId) {
 
             var dislikes = document.getElementById("dislikes");
@@ -186,7 +208,10 @@
 
         }
 
-        function submitLikes() {
+    
+        function getLikesList(reviewId) {
+            console.log(reviewId );
+            // likedSet =
             //create resuest object
             if (window.XMLHttpRequest) {
                 xhr = new XMLHttpRequest();
@@ -194,18 +219,61 @@
                 if (window.ActiveXObject) {
                     xhr = new ActiveXObject("Microsoft.XMLHTTP");
                 }
+            }
+
+            //configure the Ajax Request
+            if (xhr) {
+                xhr.open("POST", "../review.php?op=1&getLikesList=1"); // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('reviewId=' + reviewId); //send the request object
+                xhr.onload = function () {
+                    if (xhr.readyState == 4) { // request is completed
+                        if (xhr.status == 200) { //request is successful
+                            reviewObject = JSON.parse(xhr.responseText).review; //get data
+                            alert(response.message);
+                        } else {
+                            alert('Ooops! Try again');
+                        }
+                    }
+                };
+            } else {
+                document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
+            }
+        }
+
+        function submitLikes(count, reviewId, likedSet) {
+            console.log(reviewId + "and "+count );
+            // likedSet =
+            //create resuest object
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            //configure the Ajax Request
+            if (xhr) {
+                xhr.open("POST", "../review.php?op=1&addLikes=1"); // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('reviewId=' + reviewId + '&likes=' + count + '&likedSet=' + likedSet); //send the request object
+                xhr.onload = function () {
+                    if (xhr.readyState == 4) { // request is completed
+                        if (xhr.status == 200) { //request is successful
+                            let response = JSON.parse(xhr.responseText); //get data
+                            alert(response.message);
+                        } else {
+                            alert('Ooops! Try again');
+                        }
+                    }
+                };
+            } else {
+                document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
             }
         }
 
         function submitDislikes(num, reviewId, dislikedSet) {
-            //create resuest object
-            if (window.XMLHttpRequest) {
-                xhr = new XMLHttpRequest();
-            } else {
-                if (window.ActiveXObject) {
-                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-            }
 
             //create resuest object
             if (window.XMLHttpRequest) {
@@ -248,6 +316,8 @@
 
         function loadReviews() {
 
+            var isAdmin = localStorage.getItem('isAdmin');
+
             //get selected package name
             var selectElement = document.getElementById("dropdown");
             if (selectElement.selectedIndex === 0) {//validate dropdown selection
@@ -278,59 +348,79 @@
                                 let txt = "";
                                 //set elements
                                 for (let i = 0; i < response.review.length; i++) {
-                                    countUp = response.review[i].likes;
-                                    countDown = response.review[i].dislike;
+                                    obj = response.review[i];
+                                    var countUp = obj.likes;
+                                    var countDown =obj.dislike;
 
-                                    var reviewId = response.review[i].reviewId;
-                                    var likedSet = response.review[i].likedSet;
-                                    var dislikedSet = response.review[i].dislikedSet;
+                                    var reviewId = obj.reviewId;
+                                    var likedSet = obj.likedSet;
+                                    var dislikedSet = obj.dislikedSet;
                                     var iconSet = "";
 
                                     const storedUser = JSON.parse(localStorage.getItem('user'));
-                                    var userId = storedUser.userId;
+                                    userId = storedUser.userId;
                                     var likedListHas = false;
 
+                                    //is already disliked 
                                     if (dislikedSet.includes(userId.toString())) {
                                         console.log(userId + "here 1");
+                                        // hasDisliked = true;
                                         iconDownSet = "fas fa-thumbs-down";
                                     }
                                     else {
                                         console.log(userId + "here 2");
+                                        // hasDisliked = false;
                                         iconDownSet = "far fa-thumbs-down";
                                     }
 
+                                    //is already liked 
                                     if (likedSet.includes(userId.toString())) {
                                         console.log(userId + "here 3");
+                                        // hasLiked = true;
                                         iconUpSet = "fas fa-thumbs-up";
                                     }
                                     else {
                                         console.log(userId + "here 4");
+                                        // hasLiked = false;
                                         iconUpSet = "far fa-thumbs-up";
                                     }
 
                                     txt += '<table id="card">'
-                                        + "<tr><td>Overall: " + response.review[i].overall + "</td>"
-                                        + '<td> <button id="viewButton" onClick="viewReview(' + response.review[i].reviewId + ')"> View </button> </td>'
+                                        + "<tr><td>Overall: " + obj.overall + "</td>"
+                                        + '<td> <button id="viewButton" onClick="viewReview(' + obj.reviewId + ')"> View </button> </td>'
                                         + "</tr>";
 
-                                    if (response.review[i].visitedDate != "") {
-                                        txt += "<tr><td>Visited: " + response.review[i].visitedDate + "</td>"
-                                            + '<td> <button id="replyButton" onClick="replyReview(' + response.review[i].reviewId + ')"> Reply </button> </td></tr>';
+                                    if (obj.visitedDate != "") {
+
+                                        if (isAdmin === 'true') {
+
+                                            txt += "<tr><td>Visited: " + obj.visitedDate + "</td>"
+                                                + '<td> <button id="replyButton" onClick="replyReview(' + obj.reviewId + ')"> Reply </button> </td></tr>';
+                                        } else {
+                                            txt += "<tr><td>Visited: " + obj.visitedDate + "</td><td></td></tr>"
+                                        }
                                     }
                                     else {
-                                        txt += "<tr><td></td>"
-                                            + '<td> <button id="replyButton" onClick="replyReview(' + response.review[i].reviewId + ')"> Reply </button> </td></tr>';
+                                        if (isAdmin === 'true') {
+                                            txt += "<tr><td></td>"
+                                                + '<td> <button id="replyButton" onClick="replyReview(' + obj.reviewId + ')"> Reply </button> </td></tr>';
+                                        }
+
                                     }
 
-                                    txt += "<tr><td>Posted By: " + response.review[i].author + " | " + response.review[i].postedDate + "</td>"
-                                        + '<td><i id="likes" class="' + iconUpSet + '"></i><span id="likesCount">'
-                                        // + '<td><i id="likes" class="' + iconUpSet + '" onClick="thumbUpClick(' + countUp + ')"></i><span id="likesCount">'
+                                    txt += "<tr><td>Posted By: " + obj.author + " | " + obj.postedDate + "</td>"
+                                        // + '<td><i id="likes" class="' + iconUpSet + '"></i><span id="likesCount">'
+                                        + '<td><i id="likes' + i + '" class="' + iconUpSet + '" onClick="thumbUpClick(' + obj.reviewId + ',' +i +')"></i><span id="likesCount' + i + '">'
                                         + countUp
-                                        + '</span><i id="dislikes" class="' + iconDownSet + '"></i><span id="dislikesCount">'
+                                        + '</span><i id="dislikes' + i + '" class="' + iconDownSet + '"></i><span id="dislikesCount' + i + '">'
                                         // + '</span><i id="dislikes" class="' + iconDownSet + '" onClick="thumbDownClick(' + countDown + ',' + response.review[i].reviewId +','+dislikedListHas+','+userId +')"></i><span id="dislikesCount">'
                                         + countDown
-                                        + '</span></td>'
-                                        + "</tr></table>";
+                                        + '</span></td></tr>';
+
+                                    if (obj.reply != "") {
+                                        txt += '<tr><td id="replyRow">' + obj.reply + '</td></tr>';
+                                    }
+                                    txt +='</table>';
                                 }
 
                                 document.getElementById("itemContainer").innerHTML = txt; //inject into markup DOM
@@ -346,6 +436,7 @@
             }
 
         }
+
     </script>
 </head>
 
@@ -358,7 +449,7 @@
         <a href="./userProfile.html">My Profile</a>
     </div>
     <header>
-        <div id="dil">
+        <div>
             <p>Package Name
                 <select id="dropdown" name="packagesName" required>
                     <option value="option1">Please Select Package</option>

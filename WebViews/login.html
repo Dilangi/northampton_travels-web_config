@@ -90,11 +90,18 @@
                             if(!response.error){
                                 if(response.user.password === password){
                                     localStorage.setItem('user', JSON.stringify(response.user));
+                                     var email =response.user.email;
+                                    if(email.includes("northamptontravels")){
+                                        localStorage.setItem('isAdmin', true);
+                                    }
+                                    else{
+                                        localStorage.setItem('isAdmin', false);
+                                    }
                                     alert(response.message);
                                     redirectToNextPage();
                                 }
                                 else {
-                                    alert('Error submitting form');
+                                    alert('Wrong username or password');
                                 }
                             } 
                         } else {

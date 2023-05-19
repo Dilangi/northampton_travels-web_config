@@ -1,0 +1,374 @@
+<html>
+
+<head>
+    <title>Northampton Travels</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+    <style>
+        header {
+            position: absolute;
+            left: 30%;
+            top: 10%;
+        }
+
+        main {
+            position: absolute;
+            left: 5%;
+            top: 20%;
+            width: 90%;
+        }
+
+        #itemContainer {
+            background-color: #002060;
+            width: 90%;
+        }
+
+        #card {
+            width: 100%;
+            padding: 20px;
+            margin: 10px;
+            background-color: #D0CECE;
+            border: 1px solid black;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        th {
+            text-align: left;
+            padding-bottom: 20px;
+        }
+
+        /* Style the dropdown*/
+        select {
+            font-size: 16px;
+            padding: 10px;
+        }
+
+        /* Style the Go button */
+        button {
+            font-size: 18px;
+            color: white;
+            margin: 10px 20px;
+            padding: 10px 20px;
+            background-color: #002060;
+            border-radius: 30px;
+        }
+
+        #viewButton {
+            background-color: rgb(234, 234, 34);
+            border-radius: 30px;
+            color: black;
+        }
+
+        #replyButton {
+            background-color: rgb(47, 186, 47);
+            border-radius: 30px;
+            color: black;
+        }
+
+
+        /* Style the navigation bar */
+        .navbar {
+            position: absolute;
+            width: 100%;
+            top: 0%;
+            background-color: #002060;
+        }
+
+        /* Style the links inside the navigation bar */
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        /* Change the color of links on hover */
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+
+
+        table {
+            width: 60%;
+        }
+
+        th:first-child,
+        td:first-child {
+            font-size: 18px;
+            color: black;
+            font-weight: bold;
+            width: 90%;
+        }
+
+        /* Set the width of the second column to 40% */
+        th:nth-child(2),
+        td:nth-child(2) {
+            width: 10%;
+            align-content: end;
+            margin-right: 20px;
+        }
+
+
+        i {
+            color: #002060;
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+    <script>
+
+var userId=0;
+             //direct to home page
+        function directPage() {
+            window.location.href = './home.html';
+        }
+
+        var countUp = 0;
+        var countDown = 0;
+
+        function thumbUpClick(num) {
+            // var likes = document.getElementById("thumb");
+
+            // if (likes.classList.contains("fas")) {
+            //     console.log("dil");
+            //     likes.classList.remove("fas");
+            //     likes.classList.add("far");
+            //             // countUp--;
+            //         } else {
+            //             console.log("dil");
+            //             likes.classList.remove("far");
+            //             likes.classList.add("fas");
+            //             // countUp++;
+
+            //         }
+
+            var likes = document.getElementById("likes");
+            var likesCount = document.getElementById("likesCount");
+
+
+            if (likes.classList.contains("fas")) {
+                likes.classList.remove("fas");
+                likes.classList.add("far");
+                num -= num;
+            } else {
+                likes.classList.remove("far");
+                likes.classList.add("fas");
+                num += num;
+            }
+            likesCount.textContent = num;
+            submitLikes();
+            // document.getElementById("card").innerHTML = txt; 
+
+        }
+        function thumbDownClick(num, reviewId, likedListHas, userId) {
+
+            var dislikes = document.getElementById("dislikes");
+            var dislikesCount = document.getElementById("dislikesCount");
+
+            // console.log(dislikedSet);
+            // dislikedSet ="2 ,4 ,5";
+
+            if (!likedListHas) {
+                dislikes.classList.remove("far");
+                dislikes.classList.add("fas");
+                dislikedSet += " , " + userId;
+                num += num;
+            } else {
+                dislikes.classList.remove("fas");
+                dislikes.classList.add("far");
+                dislikedSet = dislikedSet.replace(userId, "");
+                num -= num;
+            }
+            dislikesCount.textContent = num;
+            submitDislikes(num, reviewId, dislikedSet);
+            // document.getElementById("card").innerHTML = txt; 
+
+        }
+
+        function submitLikes() {
+            //create resuest object
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+        }
+
+        function submitDislikes(num, reviewId, dislikedSet) {
+            //create resuest object
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            //create resuest object
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            //configure the Ajax Request
+            if (xhr) {
+                xhr.open("POST", "../review.php?op=1&addDislike=1"); // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('reviewId=' + reviewId + '&dislike=' + num + '&dislikedSet=' + dislikedSet); //send the request object
+                xhr.onload = function () {
+                    if (xhr.readyState == 4) { // request is completed
+                        if (xhr.status == 200) { //request is successful
+                            let response = JSON.parse(xhr.responseText); //get data
+                            alert(response.message);
+                        } else {
+                            alert('Ooops! Try again');
+                        }
+                    }
+                };
+            } else {
+                document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
+            }
+        }
+
+        function viewReview(reviewId) {
+            localStorage.setItem('reviewId', reviewId.toString());
+            window.location.href = './review.html';
+        }
+
+        function replyReview(reviewId) {
+            localStorage.setItem('reviewId', reviewId.toString());
+            window.location.href = './reply.html';
+        }
+
+        function setUserReviews() {
+
+            //get selected package name
+            var selectElement = document.getElementById("dropdown");
+            if (selectElement.selectedIndex === 0) {//validate dropdown selection
+                alert("Please Select Package");
+            } else {
+                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                var packagesName = selectedOption.text;
+
+                //create resuest object
+                if (window.XMLHttpRequest) {
+                    xhr = new XMLHttpRequest();
+                } else {
+                    if (window.ActiveXObject) {
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                }
+
+                //configure the Ajax Request
+                if (xhr) {
+                    console.log(packagesName);
+                    xhr.open("POST", "../review.php?op=1&packageReviews=1"); // open connection with server
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.send('packagesName=' + packagesName); //send the request object
+                    xhr.onload = function () {
+                        if (xhr.readyState == 4) { // request is completed
+                            if (xhr.status == 200) { //request is successful
+                                let response = JSON.parse(xhr.responseText); //get data
+                                let txt = "";
+                                //set elements
+                                for (let i = 0; i < response.review.length; i++) {
+                                    countUp = response.review[i].likes;
+                                    countDown = response.review[i].dislike;
+
+                                    var reviewId = response.review[i].reviewId;
+                                    var likedSet = response.review[i].likedSet;
+                                    var dislikedSet = response.review[i].dislikedSet;
+                                    var iconSet = "";
+
+                                    const storedUser = JSON.parse(localStorage.getItem('user'));
+                                    var userId = storedUser.userId;
+                                    var likedListHas = false;
+
+                                    if (dislikedSet.includes(userId.toString())) {
+                                        console.log(userId + "here 1");
+                                        iconDownSet = "fas fa-thumbs-down";
+                                    }
+                                    else {
+                                        console.log(userId + "here 2");
+                                        iconDownSet = "far fa-thumbs-down";
+                                    }
+
+                                    if (likedSet.includes(userId.toString())) {
+                                        console.log(userId + "here 3");
+                                        iconUpSet = "fas fa-thumbs-up";
+                                    }
+                                    else {
+                                        console.log(userId + "here 4");
+                                        iconUpSet = "far fa-thumbs-up";
+                                    }
+
+                                    txt += '<table id="card">'
+                                        + "<tr><td>Overall: " + response.review[i].overall + "</td>"
+                                        + '<td> <button id="viewButton" onClick="viewReview(' + response.review[i].reviewId + ')"> View </button> </td>'
+                                        + "</tr>";
+
+                                    if (response.review[i].visitedDate != "") {
+                                        txt += "<tr><td>Visited: " + response.review[i].visitedDate + "</td>"
+                                            + '<td> <button id="replyButton" onClick="replyReview(' + response.review[i].reviewId + ')"> Reply </button> </td></tr>';
+                                    }
+                                    else {
+                                        txt += "<tr><td></td>"
+                                            + '<td> <button id="replyButton" onClick="replyReview(' + response.review[i].reviewId + ')"> Reply </button> </td></tr>';
+                                    }
+
+                                    txt += "<tr><td>Posted By: " + response.review[i].author + " | " + response.review[i].postedDate + "</td>"
+                                        + '<td><i id="likes" class="' + iconUpSet + '"></i><span id="likesCount">'
+                                        // + '<td><i id="likes" class="' + iconUpSet + '" onClick="thumbUpClick(' + countUp + ')"></i><span id="likesCount">'
+                                        + countUp
+                                        + '</span><i id="dislikes" class="' + iconDownSet + '"></i><span id="dislikesCount">'
+                                        // + '</span><i id="dislikes" class="' + iconDownSet + '" onClick="thumbDownClick(' + countDown + ',' + response.review[i].reviewId +','+dislikedListHas+','+userId +')"></i><span id="dislikesCount">'
+                                        + countDown
+                                        + '</span></td>'
+                                        + "</tr></table>";
+                                }
+
+                                document.getElementById("itemContainer").innerHTML = txt; //inject into markup DOM
+
+                            } else {
+                                alert('Ooops! Try again');
+                            }
+                        }
+                    };
+                } else {
+                    document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
+                }
+            }
+
+        }
+
+        document.addEventListener('DOMContentLoaded', setUserReviews)
+    </script>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <a href="./home.html">Home</a>
+        <a href="./addReview.html">AddReview</a>
+        <a href="./myReviews.html">My Reviews</a>
+        <a href="./userProfile.html">My Profile</a>
+    </div>
+    <main>
+        <div id="itemContainer">
+        </div>
+    </main>
+</body>
+
+</html>
