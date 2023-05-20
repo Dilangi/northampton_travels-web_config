@@ -35,7 +35,9 @@
         "firstName" => $_POST['firstName'],
         "lastName" =>  $_POST['lastName'],
         "email" =>  $_POST['email'],
-        "username" =>  $_POST['username']];
+        "username" =>  $_POST['username'],
+        "picture" => $_POST['picture']
+      ];
         $result = update("user", $data,$_POST['userId'], "userId");
         if($result){
           $response['error'] = false;
