@@ -1,166 +1,165 @@
 <html>
-
-<head>
-    <title>Northampton Travels</title>
-    <style>
-        main {
-            position: absolute;
-            left: 40%;
-            top: 15%
-        }
-
-        p {
-            font-size: 20px;
-            margin-top: 20px;
-        }
-
-        input {
-            font-size: 18px;
-            padding: 10px;
-            width: 100%;
-        }
-
-        button {
-            font-size: 20px;
-            color: white;
-            margin: 20px 50px;
-            padding: 20px 50px;
-            background: url('../Images/btn_background.png');
-            border-radius: 30px;
-        }
-
-        /* Style the navigation bar */
-        .navbar {
-            position: absolute;
-            width: 100%;
-            /* left: 30%; */
-            top: 0%;
-            background-color: #002060;
-            /* overflow: hidden; */
-        }
-
-        /* Style the links inside the navigation bar */
-        .navbar a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
-
-        /* Change the color of links on hover */
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-    </style>
-    <script>
-        var userId = 0;
-        //direct to home page
-        function directPage() {
-            window.location.href = './home.html';
-        }
-
-
-        //update user data
-        function updateUser() {
-
-            var form = document.forms["userForm"];
-            var firsrName = form.elements["firstName"].value;
-            var lastName = form.elements["lastName"].value;
-            var email = form.elements["email"].value;
-            var username = form.elements["username"].value;
-
-            form.action = "../user.php?op=1&updateUser=1";
-            form.method = "POST";
-
-            var formData = new FormData(form);
-
-            //create resuest object
-            if (window.XMLHttpRequest) {
-                xhr = new XMLHttpRequest();
-            } else {
-                if (window.ActiveXObject) {
-                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
-                }
+    <head>
+        <title>Northampton Travels</title>
+        <style>
+            /* Style the main section*/
+            main {
+                position: absolute;
+                left: 40%;
+                top: 15%
             }
-            xhr.open(form.method, form.action);  // open connection with server
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
-                if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
-                    if (xhr.status === 200) {                   //request is successful
-                        let response = JSON.parse(xhr.responseText);
-                        if (!response.error) {
-                            alert(response.message);
-                            directPage();
-                        }
-                        else {
-                            alert('Update fail!');
-                        }
-                    }
+
+            /* Style the paragraph*/
+            p {
+                font-size: 20px;
+                margin-top: 20px;
+            }
+
+            /* Style the input field*/
+            input {
+                font-size: 18px;
+                padding: 10px;
+                width: 100%;
+            }
+
+            /* Style the button*/
+            button {
+                font-size: 20px;
+                color: white;
+                margin: 20px 50px;
+                padding: 20px 50px;
+                background-color:#002060;
+                border-radius: 30px;
+            }
+
+            /* Style the navigation bar */
+            .navbar {
+                position: absolute;
+                width: 100%;
+                top: 0%;
+                background-color: #002060;
+            }
+
+            /* Style the links inside the navigation bar */
+            .navbar a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            /* Change the color of links on hover */
+            .navbar a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+        </style>
+
+        <script>
+            var userId = 0;
+
+            //direct to home page
+            function directPage() {
+                window.location.href = './home.html';
+            }
+
+
+            //update user data
+            function updateUser() {
+                //initiate elements
+                var form = document.forms["userForm"];
+                var firsrName = form.elements["firstName"].value;
+                var lastName = form.elements["lastName"].value;
+                var email = form.elements["email"].value;
+                var username = form.elements["username"].value;
+
+                form.action = "../user.php?op=1&updateUser=1";
+                form.method = "POST";
+
+                var formData = new FormData(form);
+
+                //create resuest object
+                if (window.XMLHttpRequest) {
+                    xhr = new XMLHttpRequest();
                 } else {
-                    alert('Ooops! Try again');
+                    if (window.ActiveXObject) {
+                        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
                 }
-            };
-            xhr.send('userId=' + userId
-                + '&firstName=' + firstName
-                + '&lastName=' + lastName
-                + '&email=' + email
-                + '&username=' + username
-            );//send the request object
+                xhr.open(form.method, form.action);  // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.onload = function () {
+                    if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
+                        if (xhr.status === 200) {                   //request is successful
+                            let response = JSON.parse(xhr.responseText);
+                            if (!response.error) {
+                                alert(response.message);
+                                directPage();
+                            }
+                            else {
+                                alert('Update fail!');
+                            }
+                        }
+                    } else {
+                        alert('Ooops! Try again');
+                    }
+                };
+                xhr.send('userId=' + userId
+                    + '&firstName=' + firstName
+                    + '&lastName=' + lastName
+                    + '&email=' + email
+                    + '&username=' + username
+                );//send the request object
 
-        }
-
-        //set user data  
-        function setUser() {
-            var user = localStorage.getItem('user');
-            if (user) {
-                var obj = JSON.parse(user);
             }
 
-            var firstName = document.getElementById("firstName");
-            var lastName = document.getElementById("lastName");
-            var email = document.getElementById("email");
-            var username = document.getElementById("username");
+            //set user data  
+            function setUser() {
+                var user = localStorage.getItem('user');
+                if (user) {
+                    var obj = JSON.parse(user);
+                    var firstName = document.getElementById("firstName");
+                    var lastName = document.getElementById("lastName");
+                    var email = document.getElementById("email");
+                    var username = document.getElementById("username");
 
+                    firstName.value = obj.firstName;
+                    lastName.value = obj.lastName;
+                    email.value = obj.email;
+                    username.value = obj.username;
+                    userId = obj.userId;
+                }
+                else{
+                    alert('Unkown User!');
+                }
+            }
+            document.addEventListener('DOMContentLoaded', setUser)
+        </script>
+    </head>
 
-
-            firstName.value = obj.firstName;
-            lastName.value = obj.lastName;
-            email.value = obj.email;
-            username.value = obj.username;
-            userId = obj.userId;
-
-
-        }
-
-        document.addEventListener('DOMContentLoaded', setUser)
-    </script>
-</head>
-
-<body>
-    <header>Add Review</header>
-    <div class="navbar">
-        <a href="./home.html">Home</a>
-        <a href="./addReview.html">AddReview</a>
-        <a href="./myReviews.html">My Reviews</a>
-        <a href="./userProfile.html">My Profile</a>
-    </div>
-    <main>
-        <form id="userForm" onsubmit="event.preventDefault(); updateUser()">
-            <p>First Name: </p>
-            <input type="text" id="firstName" placeholder="First Name" />
-            <p>Last Name: </p>
-            <input type="text" id="lastName" placeholder="Last Name" />
-            <p>Email: </p>
-            <input type="email" id="email" placeholder="Email" />
-            <p>Username: </p>
-            <input type="text" id="username" placeholder="Username" />
-            <br></br>
-            <button type="submit">SAVE</button>
-        </form>
-    </main>
-</body>
-
+    <body>
+        <header>Add Review</header>
+        <div class="navbar">
+            <a href="./home.html">Home</a>
+            <a href="./addReview.html">AddReview</a>
+            <a href="./myReviews.html">My Reviews</a>
+            <a href="./userProfile.html">My Profile</a>
+        </div>
+        <main>
+            <form id="userForm" onsubmit="event.preventDefault(); updateUser()">
+                <p>First Name: </p>
+                <input type="text" id="firstName" placeholder="First Name" />
+                <p>Last Name: </p>
+                <input type="text" id="lastName" placeholder="Last Name" />
+                <p>Email: </p>
+                <input type="email" id="email" placeholder="Email" />
+                <p>Username: </p>
+                <input type="text" id="username" placeholder="Username" />
+                <br></br>
+                <button type="submit">SAVE</button>
+            </form>
+        </main>
+    </body>
 </html>

@@ -178,28 +178,6 @@
       }
     }
    
-    //get like list
-    else if(isset($_GET['getLikesList'])){
-      if(isset($_POST['reviewId'])){
-        // $data = [
-        //   "dislike" => $_POST['dislike'],
-        //   "dislikedSet"=>$_POST['dislikedSet']];
-        $result = fetchARecordWithOneWhereClause("review",$_POST['reviewId'], "reviewId");
-        $review = $result->fetch(PDO::FETCH_ASSOC);  //fetch data from the statement
-        if($result){
-          $response['error'] = false;
-          $response['review'] = $review;
-          $response['message'] = 'Success';
-        }else{
-          $response['error'] = true;
-          $response['message'] = 'Ooops, something went wrong';
-        }
-      }else{
-        $response['error'] = true;
-        $response['message'] = 'Required Parameters are missing';
-      }
-    }
-   
     //delete a review
     else if(isset($_GET['deleteReview'])){
       if(isset($_POST['reviewId'])){

@@ -2,24 +2,20 @@
 
 <head>
     <title>Northampton Travels</title>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous"> -->
     <style>
-body{
-    display:grid;
-    grid-template-columns: 40% 60%;
-    grid-template-rows: auto;
-    grid-template-areas:"header header"
-                    "nav main"
-                    "footer footer";}
+        body{
+            display:grid;
+            grid-template-columns: 40% 60%;
+            grid-template-rows: auto;
+            grid-template-areas:"header header"
+                            "nav main"
+                            "footer footer";}
 
         header {
             grid-area: header;
-            /* width: 100%;
-            height: 10vh; */
             background-image: url('../Images/bg_review.jpg');
             background-repeat: no-repeat;
             background-size: cover;
-            /* background-position: center; */
             font-size: 40px;
             color: #002060;
             text-align: center;
@@ -28,13 +24,7 @@ body{
 
         main {
             margin-top: 20px;
-  /* justify-content: center;  */
-  grid-area: main;
-            /* position: absolute;*/
-            /* left: 30%; */
-            /*top: 25%; */
-            
-        }
+            grid-area: main;}
 
         p {
             font-size: 20px;
@@ -50,42 +40,6 @@ body{
         th {
             text-align: left;
         }
-
-        /* .ratingOverall{
-                /* width:100%; */
-        /* display: flex;
-                transform:rotate(180deg);
-                margin-right:50px;
-            }
-            .ratingOverall input{
-                display: none;
-            }
-             .ratingOverall label{
-                cursor: pointer;
-            }
-            .ratingOverall label:before{
-                content:"\2605";
-                color:grey;
-                font-size:40px;
-            }
-             .ratingOverall label:after{
-                content:'\2605';
-                color:yellow;
-                font-size:40px;
-                position:absolute;
-                opacity:0;
-            }
-            .ratingOverall input:checked ~ label:after{opacity:1;} */
-        /* button {
-            font-size: 20px;
-            color: white;
-            margin: 20px 150px;
-            padding: 20px 50px;
-            background: url('../Images/btn_background.png');
-            border-radius: 30px;
-        } */
-
-        
 
         #btnSave {
             font-size: 16px;
@@ -128,30 +82,14 @@ body{
         }
 
         select {
-            padding: 10px;
-            /* border: 1px solid #ccc; */
-            /* border-radius: 4px; */
-            /* background-color: #fff; */
-            /* box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); */
-        }
-
-        /* select:hover {
-                border-color: #aaa;
-            }
-            select:focus {
-                outline: none;
-                border-color: #4d90fe;
-                box-shadow: 0 0 5px rgba(77, 144, 254, 0.5);
-            } */
+            padding: 10px;}
 
         /* Style the navigation bar */
         .navbar {
             position: absolute;
             width: 100%;
-            /* left: 30%; */
             top: 0%;
             background-color: #002060;
-            /* overflow: hidden; */
         }
 
         /* Style the links inside the navigation bar */
@@ -171,32 +109,11 @@ body{
         }
 
         footer {
-             /* margin-right: 50px; */
-            /* position: absolute; */
-            /* left: 60%; */
-            /* top: 25%; */
-            /* left: 30%;
-            top: 85%; */
-  /* justify-content: center;  */
-  margin-left: 30%;
-  grid-area: footer;
-        }
+            margin-left: 30%;
+            grid-area: footer;}
     </style>
 
     <script>
-// likedSet = "";
-//                             dislikedSet = "";
-//                             likes = 0;
-//                             dislike =0;
-//                             const reviewId;
-//                             var userId="";
-
-//                             var user = localStorage.getItem('user');
-// if (user) {
-//   var obj = JSON.parse(user);
-//   userId = obj.userId;
-// } 
-
         //direct to home page
         function directPage() {
             localStorage.setItem('reviewId', "");
@@ -221,7 +138,6 @@ body{
                     if (xhr.status === 200) {                   //request is successful
                         let response = JSON.parse(xhr.responseText);
                         if (!response.error) {
-                            alert(response.message);
                             directPage();
                         }
                         else {
@@ -233,73 +149,6 @@ body{
                 }
             };
         }
-
-        // //update like count
-        // function likeReview() {
-        //     // if(likedSet.includes(userId)){
-        //     //     todo
-        //     // likes = likes-1;
-        //     // }
-        //     // else{
-        //     //     likes = likes+1;
-        //     // }
-        //     if (window.XMLHttpRequest) {
-        //         xhr = new XMLHttpRequest();
-        //     } else {
-        //         if (window.ActiveXObject) {
-        //             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        //         }
-        //     }
-        //     xhr.open("POST", "../review.php?op=1&addLikes=1");  // open connection with server
-        //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        //     xhr.send('reviewId=' + reviewId + '&likedSet=' + likedSet+ '&likedSet=' + likedSet);
-        //     xhr.onload = function () {
-        //         if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
-        //             if (xhr.status === 200) {                   //request is successful
-        //                 let response = JSON.parse(xhr.responseText);
-        //                 if (!response.error) {
-        //                     alert(response.message);
-        //                 }
-        //                 else {
-        //                     alert('Error submitting form');
-        //                 }
-        //             }
-        //         } else {
-        //             alert('Ooops! Try again');
-        //         }
-        //     };
-        // }
-
-        // //update dislike count
-        // function dislikeReview() {
-        //     const reviewId = parseInt(localStorage.getItem('reviewId'));
-        //     if (window.XMLHttpRequest) {
-        //         xhr = new XMLHttpRequest();
-        //     } else {
-        //         if (window.ActiveXObject) {
-        //             xhr = new ActiveXObject("Microsoft.XMLHTTP");
-        //         }
-        //     }
-        //     xhr.open("POST", "../review.php?op=1&addDislike=1");  // open connection with server
-        //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        //     xhr.send('reviewId=' + reviewId);
-        //     xhr.onload = function () {
-        //         if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
-        //             if (xhr.status === 200) {                   //request is successful
-        //                 let response = JSON.parse(xhr.responseText);
-        //                 if (!response.error) {
-        //                     alert(response.message);
-        //                     // redirectToNextPage();
-        //                 }
-        //                 else {
-        //                     alert('Error submitting form');
-        //                 }
-        //             }
-        //         } else {
-        //             alert('Ooops! Try again');
-        //         }
-        //     };
-        // }
 
         //update review data
         function updateReview() {
@@ -313,6 +162,7 @@ body{
                 var selectedOption = selectElement.options[selectElement.selectedIndex];
                 var packagesName = selectedOption.text;
 
+                //initiate form elements
                 var form = document.forms["addReviewForm"];
                 var visitedDate = form.elements["visitedDate"].value;
                 var overall = form.elements["overall"].value;
@@ -372,7 +222,6 @@ body{
         //set review data  
         function setReview() {
             reviewId = parseInt(localStorage.getItem('reviewId'));
-            // var reviewId = storedReview.reviewId;
             if (window.XMLHttpRequest) {
                 xhr = new XMLHttpRequest();
             } else {
@@ -404,18 +253,18 @@ body{
 
                             for (var i = 0; i < dropdown.options.length; i++) {
                                 var option = dropdown.options[i];
-                                console.log(option.textContent + "and" + content);
                                 if (option.textContent === content) {
-                                    console.log("dila");
                                     option.selected = true;
                                     break;
                                 }
                             }
 
+                            //formatting the date
                             var dateString = response.review.visitedDate;
                             var dateArray = dateString.split('/'); // Split the string by '/'
                             var formattedDate = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0]; // Rearrange the parts in the desired format
 
+                            //set values to the elements
                             visitedDate.value = formattedDate;
                             overall.value = response.review.overall;
                             food.value = response.review.food;
@@ -426,6 +275,7 @@ body{
                             transportRating.value = response.review.transportRating;
                             accommodationRating.value = response.review.accommodationRating;
 
+                            //assign values to variebles
                             likedSet = response.review.likedSet;
                             dislikedSet = response.review.dislikedSet;
                             likes = response.review.likes;
@@ -448,7 +298,7 @@ body{
 </head>
 
 <body>
-    <header>Add Review</header>
+    <header>Review Details</header>
     <div class="navbar">
         <a href="./home.html">Home</a>
         <a href="./addReview.html">AddReview</a>
@@ -576,8 +426,6 @@ body{
         <button id="btnSave" type="submit" onClick="updateReview()"> EDIT</button>
         <button id="btnDelete" type="submit" onClick="deleteReview()">DELETE</button>
         </div>
-        <!-- <button id="btnLike" type="submit" onClick="likeReview()">Like</button>
-        <button id="btnDislike" type="submit" onClick="dislikeReview()">Dislike</button> -->
     </footer>
 </body>
 

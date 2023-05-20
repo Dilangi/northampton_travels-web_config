@@ -7,31 +7,33 @@
                 left: 40%;
                 top:15%
             }
+
             p{
                 font-size: 20px;
                 margin-top:20px;
             }
+
             input{
                 font-size: 18px;
                 padding:10px;
                 width:100%;
             }
+
             button{
                 font-size: 20px;
                 color: white;
                 margin:20px 50px;
                 padding:20px 50px;
-                background: url('../Images/btn_background.png');
+                background-color:#002060;
                 border-radius:30px;
             }
+
             /* Style the navigation bar */
             .navbar {
                 position: absolute;
                 width:100%;
-                /* left: 30%; */
                 top: 0%;
                 background-color:#002060;
-                /* overflow: hidden; */
             }
 
             /* Style the links inside the navigation bar */
@@ -52,16 +54,15 @@
         </style>
         <script>
             var userId=0;
+
              //direct to home page
-        function directPage() {
-            window.location.href = './home.html';
-        }
+            function directPage() {
+                window.location.href = './home.html';}
 
         
-        //add reply to database
-        function addReply() {
-
-            const reviewId = parseInt(localStorage.getItem('reviewId'));
+            //add reply to database
+            function addReply() {
+                const reviewId = parseInt(localStorage.getItem('reviewId'));
 
                 var form = document.forms["replyForm"];
                 var reply = form.elements["reply"].value;
@@ -99,10 +100,10 @@
                 };
                 xhr.send('reviewId=' + reviewId
                     + '&reply=' + reply);//send the request object
-            // }
-        }
+            }
         </script>
     </head>
+
     <body>
         <header>Add Reply</header>
         <div class="navbar">

@@ -38,7 +38,7 @@
                 font-style: bold;
                 margin:20px 50px;
                 padding:20px 50px;
-                background: url('../Images/btn_background.png');
+                background-color:#002060;
                 border-radius:30px;
             }
 
@@ -84,12 +84,13 @@
                 xhr.open(form.method, form.action);  // open connection with server
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			    xhr.onload =function(){
-                    if (xhr.readyState === XMLHttpRequest.DONE) {   // request is completed
-                        if (xhr.status === 200) {                   //request is successful
+                    if (xhr.readyState === XMLHttpRequest.DONE) {  
+                        if (xhr.status === 200) {                  
                             let response = JSON.parse(xhr.responseText);
                             if(!response.error){
                                 if(response.user.password === password){
                                     localStorage.setItem('user', JSON.stringify(response.user));
+                                    console.log("user"+ response.user.firstName+ response.user.lastName);
                                      var email =response.user.email;
                                     if(email.includes("northamptontravels")){
                                         localStorage.setItem('isAdmin', true);

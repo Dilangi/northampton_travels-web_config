@@ -6,9 +6,16 @@
 
     <style>
         header {
-            position: absolute;
-            left: 30%;
-            top: 10%;
+            width: 100%;
+            height: 10vh;
+            background-image: url('../Images/bg_review.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            font-size: 40px;
+            color: #002060;
+            text-align: center;
+            padding-top: 80px;
         }
 
         main {
@@ -93,125 +100,50 @@
             color: black;
         }
 
-
-
         table {
             width: 60%;
         }
 
+        /* Set the width of the first column to 85% */
         th:first-child,
         td:first-child {
             font-size: 18px;
             color: black;
             font-weight: bold;
-            width: 90%;
+            width: 85%;
         }
 
-        /* Set the width of the second column to 40% */
+        /* Set the width of the second column to 15% */
         th:nth-child(2),
         td:nth-child(2) {
-            width: 10%;
+            width: 15%;
             align-content: end;
             margin-right: 20px;
         }
-
 
         i {
             color: #002060;
             padding: 10px;
             margin: 10px;
         }
+
+        /*style the row with reply*/
+        #replyRow {
+            background-color: #717374;
+            border-radius: 30px 0px 30px 30px;
+            color: black;
+            padding: 20px;
+        }
     </style>
     <script>
+        var userId = 0;
 
-var userId=0;
-             //direct to home page
-        function directPage() {
-            window.location.href = './home.html';
-        }
-
-        var countUp = 0;
-        var countDown = 0;
-
-        function thumbUpClick(num) {
-            // var likes = document.getElementById("thumb");
-
-            // if (likes.classList.contains("fas")) {
-            //     console.log("dil");
-            //     likes.classList.remove("fas");
-            //     likes.classList.add("far");
-            //             // countUp--;
-            //         } else {
-            //             console.log("dil");
-            //             likes.classList.remove("far");
-            //             likes.classList.add("fas");
-            //             // countUp++;
-
-            //         }
-
-            var likes = document.getElementById("likes");
-            var likesCount = document.getElementById("likesCount");
-
-
-            if (likes.classList.contains("fas")) {
-                likes.classList.remove("fas");
-                likes.classList.add("far");
-                num -= num;
-            } else {
-                likes.classList.remove("far");
-                likes.classList.add("fas");
-                num += num;
-            }
-            likesCount.textContent = num;
-            submitLikes();
-            // document.getElementById("card").innerHTML = txt; 
-
-        }
-        function thumbDownClick(num, reviewId, likedListHas, userId) {
-
-            var dislikes = document.getElementById("dislikes");
-            var dislikesCount = document.getElementById("dislikesCount");
-
-            // console.log(dislikedSet);
-            // dislikedSet ="2 ,4 ,5";
-
-            if (!likedListHas) {
-                dislikes.classList.remove("far");
-                dislikes.classList.add("fas");
-                dislikedSet += " , " + userId;
-                num += num;
-            } else {
-                dislikes.classList.remove("fas");
-                dislikes.classList.add("far");
-                dislikedSet = dislikedSet.replace(userId, "");
-                num -= num;
-            }
-            dislikesCount.textContent = num;
-            submitDislikes(num, reviewId, dislikedSet);
-            // document.getElementById("card").innerHTML = txt; 
-
-        }
-
-        function submitLikes() {
-            //create resuest object
-            if (window.XMLHttpRequest) {
-                xhr = new XMLHttpRequest();
-            } else {
-                if (window.ActiveXObject) {
-                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-            }
-        }
-
-        function submitDislikes(num, reviewId, dislikedSet) {
-            //create resuest object
-            if (window.XMLHttpRequest) {
-                xhr = new XMLHttpRequest();
-            } else {
-                if (window.ActiveXObject) {
-                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-            }
+        //when click on thumbs up icon
+        function thumbUpClick(reviewId, row) {
+            var likesCount = document.getElementById('likesCount' + row);
+            var count = parseInt(likesCount.textContent);
+            var likes = document.getElementById("likes" + row);
+            var likedSet = "";
 
             //create resuest object
             if (window.XMLHttpRequest) {
@@ -224,14 +156,119 @@ var userId=0;
 
             //configure the Ajax Request
             if (xhr) {
-                xhr.open("POST", "../review.php?op=1&addDislike=1"); // open connection with server
+                xhr.open("POST", "../review.php?op=1&reviewIdReview=1"); // open connection with server
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                xhr.send('reviewId=' + reviewId + '&dislike=' + num + '&dislikedSet=' + dislikedSet); //send the request object
+                xhr.send('reviewId=' + reviewId); //send the request object
                 xhr.onload = function () {
-                    if (xhr.readyState == 4) { // request is completed
-                        if (xhr.status == 200) { //request is successful
+                    if (xhr.readyState == 4) { 
+                        if (xhr.status == 200) { 
+                            response= JSON.parse(xhr.responseText); //get data
+                             reviewObject = response.review;
+
+                             //change the icon appearance
+                            if (likes.classList.contains("fas")) {//if negative the like
+                                likes.classList.remove("fas");
+                                likes.classList.add("far");
+                                var replacer = "| " + userId;
+                                console.log(replacer);
+                                console.log(reviewObject.likedSet);
+                                likedSet = reviewObject.likedSet.replace(replacer,"");
+                                count--;
+                            } else { //if possitive the like
+                                likes.classList.remove("far");
+                                likes.classList.add("fas");
+                                likedSet = reviewObject.likedSet + "| " + userId;
+                                count++;
+                            }
+                            
+                            likesCount.textContent = count;//update view count
+
+                            submitLikes(count, reviewId, likedSet);
+                        } else {
+                            alert('Ooops! Try again');
+                        }
+                    }
+                };
+            } else {
+                document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
+            }
+
+        }
+
+        //when click on thumbs down icon
+        function thumbDownClick(reviewId, row) {
+            var dislikesCount = document.getElementById('dislikesCount' + row);
+            var count = parseInt(dislikesCount.textContent);
+            var dislikes = document.getElementById("dislikes" + row);
+            var dislikedSet = "";
+
+            //create resuest object
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            //configure the Ajax Request
+            if (xhr) {
+                xhr.open("POST", "../review.php?op=1&reviewIdReview=1"); // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('reviewId=' + reviewId); //send the request object
+                xhr.onload = function () {
+                    if (xhr.readyState == 4) { 
+                        if (xhr.status == 200) { 
+                            response= JSON.parse(xhr.responseText); //get data
+                             reviewObject = response.review;
+
+                             //change the icon appearance
+                            if (dislikes.classList.contains("fas")) {
+                                dislikes.classList.remove("fas");
+                                dislikes.classList.add("far");
+                                var replacer = "| " + userId;
+                                dislikedSet = reviewObject.dislikedSet.replace(replacer,"");
+                                count--;
+                            } else {
+                                dislikes.classList.remove("far");
+                                dislikes.classList.add("fas");
+                                dislikedSet = reviewObject.dislikedSet + "| " + userId;
+                                count++;
+                            }
+                            
+                            dislikesCount.textContent = count; //update view count
+                            
+                            submitDislikes(count, reviewId, dislikedSet);
+                        } else {
+                            alert('Ooops! Try again');
+                        }
+                    }
+                };
+            } else {
+                document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
+            }
+
+        }
+
+        //update database likes details
+        function submitLikes(count, reviewId, likedSet) {
+            
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+            
+            if (xhr) {
+                xhr.open("POST", "../review.php?op=1&addLikes=1"); // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('reviewId=' + reviewId + '&likes=' + count + '&likedSet=' + likedSet); //send the request object
+                xhr.onload = function () {
+                    if (xhr.readyState == 4) { 
+                        if (xhr.status == 200) { 
                             let response = JSON.parse(xhr.responseText); //get data
-                            alert(response.message);
                         } else {
                             alert('Ooops! Try again');
                         }
@@ -242,27 +279,56 @@ var userId=0;
             }
         }
 
+        //update database dislikes details
+        function submitDislikes(num, reviewId, dislikedSet) {
+            
+            if (window.XMLHttpRequest) {
+                xhr = new XMLHttpRequest();
+            } else {
+                if (window.ActiveXObject) {
+                    xhr = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+            }
+
+            if (xhr) {
+                xhr.open("POST", "../review.php?op=1&addDislike=1"); // open connection with server
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.send('reviewId=' + reviewId + '&dislike=' + num + '&dislikedSet=' + dislikedSet); //send the request object
+                xhr.onload = function () {
+                    if (xhr.readyState == 4) { 
+                        if (xhr.status == 200) {
+                            let response = JSON.parse(xhr.responseText); //get data
+                        } else {
+                            alert('Ooops! Try again');
+                        }
+                    }
+                };
+            } else {
+                document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
+            }
+        }
+
+        //direct to the review page
         function viewReview(reviewId) {
             localStorage.setItem('reviewId', reviewId.toString());
             window.location.href = './review.html';
         }
 
+        //direct to the reply page
         function replyReview(reviewId) {
             localStorage.setItem('reviewId', reviewId.toString());
             window.location.href = './reply.html';
         }
 
-        function setUserReviews() {
+        //set the review list
+        function loadReviews() {
 
-            //get selected package name
-            var selectElement = document.getElementById("dropdown");
-            if (selectElement.selectedIndex === 0) {//validate dropdown selection
-                alert("Please Select Package");
-            } else {
-                var selectedOption = selectElement.options[selectElement.selectedIndex];
-                var packagesName = selectedOption.text;
-
-                //create resuest object
+            var isAdmin = localStorage.getItem('isAdmin');
+            var user = localStorage.getItem('user');
+            if (user) {         //if registered user
+                var obj = JSON.parse(user);
+                var author = obj.username;
+                
                 if (window.XMLHttpRequest) {
                     xhr = new XMLHttpRequest();
                 } else {
@@ -273,73 +339,82 @@ var userId=0;
 
                 //configure the Ajax Request
                 if (xhr) {
-                    console.log(packagesName);
-                    xhr.open("POST", "../review.php?op=1&packageReviews=1"); // open connection with server
+                    xhr.open("POST", "../review.php?op=1&authorReviews=1"); // open connection with server
                     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-                    xhr.send('packagesName=' + packagesName); //send the request object
+                    xhr.send('author=' + author); //send the request object
                     xhr.onload = function () {
-                        if (xhr.readyState == 4) { // request is completed
-                            if (xhr.status == 200) { //request is successful
+                        if (xhr.readyState == 4) { 
+                            if (xhr.status == 200) {
                                 let response = JSON.parse(xhr.responseText); //get data
                                 let txt = "";
+
                                 //set elements
                                 for (let i = 0; i < response.review.length; i++) {
-                                    countUp = response.review[i].likes;
-                                    countDown = response.review[i].dislike;
+                                    obj = response.review[i];
+                                    var countUp = obj.likes;
+                                    var countDown = obj.dislike;
 
-                                    var reviewId = response.review[i].reviewId;
-                                    var likedSet = response.review[i].likedSet;
-                                    var dislikedSet = response.review[i].dislikedSet;
+                                    var reviewId = obj.reviewId;
+                                    var likedSet = obj.likedSet;
+                                    var dislikedSet = obj.dislikedSet;
                                     var iconSet = "";
 
                                     const storedUser = JSON.parse(localStorage.getItem('user'));
-                                    var userId = storedUser.userId;
+                                    userId = storedUser.userId;
                                     var likedListHas = false;
 
+                                    //is already disliked 
                                     if (dislikedSet.includes(userId.toString())) {
-                                        console.log(userId + "here 1");
                                         iconDownSet = "fas fa-thumbs-down";
                                     }
                                     else {
-                                        console.log(userId + "here 2");
                                         iconDownSet = "far fa-thumbs-down";
                                     }
 
+                                    //is already liked 
                                     if (likedSet.includes(userId.toString())) {
-                                        console.log(userId + "here 3");
                                         iconUpSet = "fas fa-thumbs-up";
                                     }
                                     else {
-                                        console.log(userId + "here 4");
                                         iconUpSet = "far fa-thumbs-up";
                                     }
 
+                                    //create table content
                                     txt += '<table id="card">'
-                                        + "<tr><td>Overall: " + response.review[i].overall + "</td>"
-                                        + '<td> <button id="viewButton" onClick="viewReview(' + response.review[i].reviewId + ')"> View </button> </td>'
+                                        + "<tr><td>Overall: " + obj.overall + "</td>"
+                                        + '<td> <button id="viewButton" onClick="viewReview(' + obj.reviewId + ')"> View </button> </td>'
                                         + "</tr>";
 
-                                    if (response.review[i].visitedDate != "") {
-                                        txt += "<tr><td>Visited: " + response.review[i].visitedDate + "</td>"
-                                            + '<td> <button id="replyButton" onClick="replyReview(' + response.review[i].reviewId + ')"> Reply </button> </td></tr>';
-                                    }
-                                    else {
-                                        txt += "<tr><td></td>"
-                                            + '<td> <button id="replyButton" onClick="replyReview(' + response.review[i].reviewId + ')"> Reply </button> </td></tr>';
+                                    if (obj.visitedDate != "") {
+
+                                        if (isAdmin === 'true') {
+                                            txt += "<tr><td>Visited: " + obj.visitedDate + "</td>"
+                                                + '<td> <button id="replyButton" onClick="replyReview(' + obj.reviewId + ')"> Reply </button> </td></tr>';
+                                        } else {
+                                            txt += "<tr><td>Visited: " + obj.visitedDate + "</td><td></td></tr>"
+                                        }
                                     }
 
-                                    txt += "<tr><td>Posted By: " + response.review[i].author + " | " + response.review[i].postedDate + "</td>"
-                                        + '<td><i id="likes" class="' + iconUpSet + '"></i><span id="likesCount">'
-                                        // + '<td><i id="likes" class="' + iconUpSet + '" onClick="thumbUpClick(' + countUp + ')"></i><span id="likesCount">'
+                                    else {
+                                        if (isAdmin === 'true') {
+                                            txt += "<tr><td></td>"
+                                                + '<td> <button id="replyButton" onClick="replyReview(' + obj.reviewId + ')"> Reply </button> </td></tr>';
+                                        }
+                                    }
+
+                                    txt += "<tr><td>Posted By: " + obj.author + " | " + obj.postedDate + "</td>"
+                                        + '<td><i id="likes' + i + '" class="' + iconUpSet + '" onClick="thumbUpClick(' + obj.reviewId + ',' + i + ')"></i><span id="likesCount' + i + '">'
                                         + countUp
-                                        + '</span><i id="dislikes" class="' + iconDownSet + '"></i><span id="dislikesCount">'
-                                        // + '</span><i id="dislikes" class="' + iconDownSet + '" onClick="thumbDownClick(' + countDown + ',' + response.review[i].reviewId +','+dislikedListHas+','+userId +')"></i><span id="dislikesCount">'
+                                        + '</span><i id="dislikes' + i + '" class="' + iconDownSet + '" onClick="thumbDownClick(' + obj.reviewId + ',' + i + ')"></i><span id="dislikesCount' + i + '">'
                                         + countDown
-                                        + '</span></td>'
-                                        + "</tr></table>";
+                                        + '</span></td></tr>';
+
+                                    if (obj.reply != "") {
+                                        txt += '<tr><td id="replyRow">' + obj.reply + '</td></tr>';}
+                                    txt += '</table>';
                                 }
 
-                                document.getElementById("itemContainer").innerHTML = txt; //inject into markup DOM
+                                document.getElementById("itemContainer").innerHTML = txt; //table element inject into markup DOM
 
                             } else {
                                 alert('Ooops! Try again');
@@ -349,22 +424,25 @@ var userId=0;
                 } else {
                     document.getElementById("updatemessage").innerHTML = "Could not perform stated request";
                 }
+            }else{
+                alert('Unkonwn user!')
             }
-
         }
-
-        document.addEventListener('DOMContentLoaded', setUserReviews)
+        
+        document.addEventListener('DOMContentLoaded', loadReviews)
     </script>
 </head>
 
 <body>
 
+    <header>My Reviews</header>
     <div class="navbar">
         <a href="./home.html">Home</a>
         <a href="./addReview.html">AddReview</a>
         <a href="./myReviews.html">My Reviews</a>
         <a href="./userProfile.html">My Profile</a>
     </div>
+
     <main>
         <div id="itemContainer">
         </div>

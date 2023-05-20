@@ -9,16 +9,9 @@ $db = 'northampton_travels';
 global $pdo;
 try {
  $pdo = new PDO("mysql:host=$host;  port=$port; dbname=$db;", $user_name, $pass);
-//  $pdo->exec("SET character_set_connection = 'utf8'");
-//     $pdo->exec("SET NAMES 'UTF8'");
      $created = date("Y:m:d h:i:s");
-     // foreach ($createTables as $createTable) {
-     //       $success = $GLOBALS['pdo']->prepare($createTable);
-     //       $success->execute();
-     // }
 } catch (PDOException $e) {
   echo "Error!: " . $e->getMessage() . "<br/>";
- //echo "Ooooops something bad happened";
 }
 
 
@@ -129,7 +122,7 @@ function fetchAllRecordWithOneWhereClause($table, $field, $value)
   return $resultAll;
 }
 
-//fetch all student record from database and handle ajax request
+//fetch all record from database and handle ajax request
  function fetchARecordWithTwoWhereClause($table, $field, $value, $fieldtwo, $valuetwo)
 {
      $stmt = $GLOBALS['pdo']->prepare('SELECT * FROM ' . $table . ' WHERE ' . $field . ' = :value AND ' . $fieldtwo .' = :valuetwo');
@@ -141,7 +134,7 @@ function fetchAllRecordWithOneWhereClause($table, $field, $value)
      return $stmt;
 }
 
-//fetch all student record from database and handle ajax request
+//fetch all record from database and handle ajax request
  function fetchARecordWithThreeWhereClause($table, $field, $value, $fieldtwo, $valuetwo, $fieldthree, $valuethree)
 {
      $stmt = $GLOBALS['pdo']->prepare('SELECT * FROM ' . $table . ' WHERE ' . $field . ' = :value AND ' . $fieldtwo . ' = :valuetwo AND ' . $fieldthree . ' = :valuethree');
@@ -182,7 +175,7 @@ function fetchARecordWithFourWhereClause($table, $field, $value, $fieldtwo, $val
 
 }
 
-  		//delete student record from database and handle ajax request
+//delete record from database and handle ajax request
  function deleteRecord($table, $field, $value)
 {
 
@@ -343,6 +336,5 @@ function updateUserPassword($criteria, $updateField, $updateValue) {
           echo '<script language="javascript">';
            echo 'alert("The requested information has been succesfully saved.")';
           echo '</script>';
-        //  echo "<meta http-equiv='refresh' content='0'>";
         echo "The requested information has been succesfully saved.";
 }

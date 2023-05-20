@@ -27,7 +27,6 @@
       $response['message'] = 'Required Parameters are missing';
     }
   }
-  
 
   // update user details
   else if(isset($_GET['updateUser'])){
