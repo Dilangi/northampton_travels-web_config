@@ -72,6 +72,21 @@
         }
     }
     
+    //select all reviews
+    else if(isset($_GET['allReviews'])){
+          $result = fetchAllRecordsWithFetchAll("review");
+          // $review = $result->fetch(PDO::FETCH_ASSOC);  //fetch data from the statement
+      
+          if($result){
+              $response['error'] = false;
+              $response['review'] = $result;
+              $response['message'] = 'Successfully Loaded!!';
+          }else{
+              $response['error'] = true;
+              $response['message'] = 'No reviews';
+          }
+    }
+    
     //select review of the logged person
     else if(isset($_GET['authorReviews'])){
       if(isset($_POST['author'])){

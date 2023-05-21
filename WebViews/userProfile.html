@@ -70,7 +70,7 @@
             function updateUser() {
                 //initiate elements
                 var form = document.forms["userForm"];
-                var firsrName = form.elements["firstName"].value;
+                var firstName = form.elements["firstName"].value;
                 var lastName = form.elements["lastName"].value;
                 var email = form.elements["email"].value;
                 var username = form.elements["username"].value;
@@ -95,7 +95,7 @@
                         if (xhr.status === 200) {                   //request is successful
                             let response = JSON.parse(xhr.responseText);
                             if (!response.error) {
-                                alert(response.message);
+                                alert("Successfully updated!");
                                 directPage();
                             }
                             else {
